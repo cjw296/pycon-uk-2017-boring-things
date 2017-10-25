@@ -153,7 +153,7 @@ I want to do something different!
 -------------
 
 :id: test1
-:data-x: r2500
+:data-x: r3000
 :data-y: r-424
 :data-z: r-700
 
