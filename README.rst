@@ -15,10 +15,11 @@ Develop it?
 Test it?
 --------
 
-::
+In the root of the repository clone::
 
   picky
-  pytest
+  export DB_URL={sqlalchemy url for test postgres db}
+  export PYTHONPATH=. pytest
 
 
 Build it?

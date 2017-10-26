@@ -25,13 +25,13 @@ db = config.get('db', 'name')
 user = config.get('db', 'user')
 password = config.get('db', 'password')
 
-print('connecting to {} as {}', db, user)
+log.debug('connecting to %s as %s', db, user)
 conn = psycopg2.connect(dbname=db, user=user, password=password)
 
 filename = os.path.basename(args.path)
 with open(args.path) as source:
-    print('opened {} to insert as {}', args.path, filename)
+    log.debug('opened %s to insert as %s', args.path, filename)
     conn.execute('insert into notes values (?, ?)',
                  (filename, source.read()))
 conn.commit()
-print('yay!')
+log.info('successfully inserted %s', filename)

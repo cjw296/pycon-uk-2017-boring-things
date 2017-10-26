@@ -8,6 +8,9 @@ def script():
     parser.add_argument('path', help='Path to the file to process')
     parser.add_argument('-q', '--quiet', action='store_true')
     parser.add_argument('-v', '--verbose', action='store_true')
+    parser.add_argument('--db-name')
+    parser.add_argument('--db-user')
+    parser.add_argument('--db-pass')
     args = parser.parse_args()
 
     config = RawConfigParser()
@@ -23,9 +26,9 @@ def script():
         handler.setLevel(logging.DEBUG if args.verbose else logging.INFO)
         log.addHandler(handler)
 
-    db = config.get('db', 'name')
-    user = config.get('db', 'user')
-    password = config.get('db', 'password')
+    db = args.db_name or os.environ.get('DB_NAME') or config.get('db', 'name')
+    user = args.db_user or os.environ.get('DB_USER') or config.get('db', 'user')
+    password = args.db_pass or os.environ.get('DB_PASS') or config.get('db', 'password')
 
     log.debug('connecting to %s as %s', db, user)
     conn = psycopg2.connect(dbname=db, user=user, password=password)

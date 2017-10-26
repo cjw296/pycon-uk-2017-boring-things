@@ -29,6 +29,7 @@ footer, header, hgroup, menu, nav, section {
 body {
     line-height: 1;
 }
+
 ol, ul {
     list-style: disc;
     list-style-position: inside;
@@ -86,8 +87,17 @@ div.step {
     font-weight: bold;
 }
 
-.step p, .step li {
+.step ul {
+    margin-left: 60px;
+}
+
+.step p {
     margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.step li {
+    margin-top: 40px;
     margin-bottom: 10px;
 }
 
@@ -142,6 +152,7 @@ div pre.code, div .box {
     border-radius: 10px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, .1);
     font-size: 20px;
+    vertical-align: top;
 }
 
 div p.box, div.box p, div.slide p {
@@ -182,7 +193,6 @@ div.step .w400 {width: 400px;}
 div.step .w600 {width: 600px;}
 div.step .w800 {width: 800px;}
 div.step .center { text-align: center;}
-div.step .right { text-align: right;}
 div.step .sp100 {margin-top: 100px;}
 div.step .sp200 {margin-top: 200px;}
 div.step .sp300 {margin-top: 300px;}
@@ -281,11 +291,48 @@ div#copy3.past .example3{
 
 div#test1.past .code{
     transition:         0.5s;
-    transform:         translateX(-450px);
+    transform:         translateX(-510px);
 }
 
 
+div#test2.future .code{
+    opacity: 0;
+    transform:         translateY(33px) translateZ(-101px);
+}
+
 div#test2 .code{
     transition:         0.5s;
-    transform:         translateX(-450px);
+    transform:         translateY(33px) translateX(490px) translateZ(-101px);
+}
+
+div.side-by-side {
+    width: 4000px;
+    text-align: center;
+}
+
+div.side-by-side .code {
+    display: inline-block;
+    text-align: left;
+    margin-right: 20px;
+}
+
+div#base-class pre.code, div#base-script pre.code{
+    font-size: 18px;
+}
+
+div.future div.base-script{
+    opacity: 0;
+}
+
+div.base-script{
+    transform:         translateX(450px);
+}
+
+div#simple-function.future .code{
+   opacity: 0;
+}
+
+div#simple-function:not(.future) .code{
+    transition:        0.5s;
+   opacity: 1;
 }

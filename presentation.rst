@@ -89,7 +89,7 @@ Its too verbose!
 
 .. note::
   "I only want that when I'm debugging"
-  standard library logging
+  standard library logging - but briefly
 
 --------------
 
@@ -153,9 +153,12 @@ I want to do something different!
 -------------
 
 :id: test1
-:data-x: r3000
-:data-y: r-424
+:data-x: r2500
+:data-y: r-500
 :data-z: r-700
+
+.. note::
+  spot the bugs (quiet arg, no execute method on conn)
 
 Uh Oh, We better test that!
 ---------------------------
@@ -163,49 +166,272 @@ Uh Oh, We better test that!
 .. include:: code/testable1.py
   :code: python
 
-.. note::
-  ...and for each of the copies
-  Have to test at a high level.
-  No code re-use, bugs are everywhere
-  Fancy transition to show where we started.
-  How did we get here? Where do we go next?
-
 -------------
 
 :id: test2
 :data-x: r0
 :data-y: r0
-:data-z: r0
+:data-z: r100
+
+.. include:: code/tests/test_testable1.py
+  :code: python
+  :start-line: 7
+
+.. note::
+  Have to test at a high level.
+  Getting coverage is a pain.
+  Not checking log levels.
+
+  ...and for each of the copies
+  No code re-use, bugs are everywhere
+  Fancy transition to show where we started.
+  How did we get here? Where do we go next?
 
 --------------
 
-:data-x: r3000
+:id: base-class
+:data-x: r2300
 :data-y: r0
 :data-z: r0
+:class: side-by-side
 
-Now we have two problems...
----------------------------
+Anti-pattern 2: The Base Class
+------------------------------
 
-... note::
-  abstract into classes -> god class
+
+.. include:: code/testable1.py
+  :code: python
+
+.. include:: code/base_class.py
+  :code: python
+  :start-line: 4
+  :end-line: 60
+
+--------------
+
+:id: base-script
+:data-x: r900
+:data-z: r100
+
+.. container:: base_script
+
+  .. include:: code/base_class.py
+    :code: python
+    :start-line: 61
+
+  .. class:: header
+
+  What's so bad about that?
+
+.. note::
+  abstract into classes -> bells-and-whistles class
+  end up with infinite plugin methods that are all called
+  usually just test the 'do-it' method
+  hard to test all the plugin points
+
+--------------
+
+:data-x: r2100
+:data-z: r0
+
+Anti-pattern 3: Splitting Configuration
+---------------------------------------
+
+.. include:: code/config_split.py
+  :code: python
+
+.. note::
 
   splitting config across objects (config, args, env)
 
 --------------
 
+:data-x: r1700
+:class: slide
+
+So how did we get here?
+-----------------------
+
+.. container:: sp100
+
+  - Multiple scripts ends up needing framework
+
+.. container:: sp100
+
+  - Each script is usually a single function
+
+.. container:: sp100
+
+  - Much shared config
+
+----------------
+
+:data-y: 0
+:data-x: r-5000
+:data-z: r2000
+
+----------------
+
+:data-x: r-5000
+:data-z: r2000
+
+----------------
+
+:data-x: r-5000
+:data-z: r-2000
+
+----------------
+
+:data-x: r-5000
+:data-y: r-76
+:data-z: r-2200
+
+----------------
+
+:id: simple-function
+:data-x: r0
+:data-y: r400
+:data-z: r0
+
+.. include:: code/insert_note.py
+  :code: python
+
+
+----------------
+
+:data-x: r0
+:data-y: r1200
+:data-z: r0
+:class: side-by-side
+
+A tested function
+-----------------
+
+
+.. include:: code/insert_note.py
+  :code: python
+
+.. include:: code/tests/test_insert_note.py
+  :code: python
+  :start-line: 4
+
+----------------
+
+:class: side-by-side
+
+Components: Argument Parsing
+----------------------------
+
+
+.. include:: code/testable1.py
+  :code: python
+
+.. include:: code/components.py
+  :code: python
+  :start-line: 3
+  :end-line: 16
+
+----------------
+
+:class: side-by-side
+
+Components: Config
+----------------------------
+
+
+.. include:: code/testable1.py
+  :code: python
+
+.. include:: code/components.py
+  :code: python
+  :start-line: 17
+  :end-line: 31
+
+
+.. note::
+   user preferences woven in here
+   mention configurator?
+
+----------------
+
+:class: side-by-side
+
+Components: Logging
+----------------------------
+
+
+.. include:: code/testable1.py
+  :code: python
+
+.. include:: code/components.py
+  :code: python
+  :start-line: 34
+  :end-line: 63
+
+----------------
+
+:class: side-by-side
+
+Components: Database
+----------------------------
+
+
+.. include:: code/testable1.py
+  :code: python
+
+.. include:: code/components.py
+  :code: python
+  :start-line: 64
+
+----------------
+
+.. container:: box
+
+  .. class:: header
+
+    How do we wire all that together?
+
+----------------
+
+:class: side-by-side
+
+Manually?
+---------
+
+.. include:: code/manual.py
+  :code: python
+  :start-line: 7
+  :end-line: 25
+
+.. include:: code/manual.py
+  :code: python
+  :start-line: 26
+
+
+.. note::
+
+ what about those ellipsis?
+ how do we know we got the stuff in the __main__ block right?
+
+----------------
+
+:class: slide
+
+Mush
+----
+
+* Dependency injection
+
+* Components specify their resources
+
+  * what do they need?
+
+  * what do they produce?
+
+* Runners link those together
 
 
 
-
-
-To Cover
---------
-
-command line option processing,
-config files,
-user preferences,
-logging,
-structuring code for testability.
 
 --------------
 
@@ -213,23 +439,15 @@ structuring code for testability.
 Structure
 =========
 
-anecdotal script:
-- no testing
-- add copy
-- add config
-- print everywhere
+- runners
+- configuring resources
+- assemble and clone
+- factory function
 
-antipatterns:
-- c'n'p code
-- god class
-- mention clean code?
-- splitting config across objects (config, args, etc)
+- testing (should test runn
 
 concepts:
 
-- structure for testing -> dependency injection
-- one source of config, layered from sources
-- test the components
 - assemble into a runner
 - have a high-level test of that
 - abstract out common bits
@@ -284,29 +502,30 @@ Questions
 Links
 =======
 
+mush
+------------
+
+* https://pypi.python.org/pypi/testfixtures
+* search for "testfixtures python"
+
 testfixtures
 ------------
 
 * https://pypi.python.org/pypi/testfixtures
 * search for "testfixtures python"
 
-mock
-----
+mortar_rdb
+----------
 
-* http://docs.python.org/dev/library/unittest.mock
-* search for "python mock"
+* https://pypi.python.org/pypi/testfixtures
+* search for "testfixtures python"
 
 Chris Withers
 -------------
 
-* chris@withers.org
+* chris@withers.org / cwithers@jumptrading.com
 * @chriswithers13
 
 .. note:: 
 
-   testfixtures and mock are available separately, py25 - py33
-
-   READ THE DOCS - context managers, decorators, etc
-
-   newer unittest features only really fully there in py33
-   unittest2 may bring a lot of it?
+   configurator? Roll links into "options" section?
