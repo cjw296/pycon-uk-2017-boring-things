@@ -1,7 +1,7 @@
 Want to view the presentation?
 ------------------------------
 
-http://slides.simplistix.co.uk/PyConUK2017-boring-things/#/title
+http://slides.simplistix.co.uk/PyConUK2017-boring-things
 
 Develop it?
 -----------
@@ -18,12 +18,15 @@ Test it?
 In the root of the repository clone::
 
   picky
-  export DB_URL={sqlalchemy url for test postgres db}
-  export PYTHONPATH=. pytest
+  export DB_NAME={test postgres db name}
+  export DB_USER={test postgres db user}
+  export DB_PASSWORD={test postgres db password}
+  export PYTHONPATH=.
+  pytest
 
 
 Build it?
 ---------
 
-bin/hovercraft presentation.rst ~/Dropbox/Presentations/PyCon2017-boring-things
+bin/hovercraft presentation.rst build
 
