@@ -729,15 +729,15 @@ Testing the Base Runner
 Testing the Scripts
 -------------------
 
+.. include:: code/assemble_and_clone.py
+  :code: python
+  :start-line: 47
+
 .. container:: box
 
   - How do we test these?
 
   - Have we wired up resources correctly?
-
-.. include:: code/assemble_and_clone.py
-  :code: python
-  :start-line: 47
 
 ----------------
 
@@ -778,6 +778,7 @@ Summary
   - abstract and test framework components separately
   - have one source of framework configuration information
   - if using mush
+
     - use lots of labels
     - write a "run with" helper
 
@@ -855,8 +856,8 @@ validation
 
 - voluptuous
 
-  - http://marshmallow.readthedocs.io/
-  - search for "python marshmallow"
+  - https://pypi.python.org/pypi/voluptuous
+  - search for "python voluptuous"
 
 - mushroom
 

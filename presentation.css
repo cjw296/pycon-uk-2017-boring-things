@@ -363,11 +363,11 @@ div.sub-box {
 }
 
 div#summary ul {
-    margin: 0;
+    margin: 30px;
 }
 
 div#summary.slide {
-    width: 950px;
+    width: 1000px;
 }
 
 div.slide.options-slide {
