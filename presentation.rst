@@ -344,7 +344,7 @@ Components: Config
 .. include:: code/components.py
   :code: python
   :start-line: 17
-  :end-line: 31
+  :end-line: 35
 
 
 .. note::
