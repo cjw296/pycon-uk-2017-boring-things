@@ -21,7 +21,7 @@ import yaml
 
 def load_config(path):
     with open(path) as source:
-        return yaml.load(source)
+        return yaml.safe_load(source)
 
 
 def adjust_config(args: Namespace, config):

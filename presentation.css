@@ -89,6 +89,7 @@ div.step {
 
 .step ul {
     margin-left: 60px;
+    margin-right: 60px;
 }
 
 .step p {
@@ -316,6 +317,14 @@ div.side-by-side .code {
     margin-right: 20px;
 }
 
+div.side-by-side .box {
+    display: inline-block;
+    text-align: left;
+    margin-top: 20px;
+    margin-right: 20px;
+    padding-bottom: 40px;
+}
+
 div#base-class pre.code, div#base-script pre.code{
     font-size: 18px;
 }
@@ -335,4 +344,45 @@ div#simple-function.future .code{
 div#simple-function:not(.future) .code{
     transition:        0.5s;
    opacity: 1;
+}
+
+div#testing-scripts.step ul {
+    padding-bottom: 30px;
+}
+
+div#testing-scripts-2 {
+    width: 4000px;
+    text-align: center;
+}
+
+div.sub-box {
+    display: inline-block;
+    text-align: left;
+    margin-right: 20px;
+    vertical-align: top;
+}
+
+div#summary ul {
+    margin: 0;
+}
+
+div#summary.slide {
+    width: 950px;
+}
+
+div.slide.options-slide {
+    width: 950px;
+}
+
+div.options-slide ul{
+    margin: 0;
+    margin-left: 60px;
+}
+
+div.options-slide li{
+    margin: 20px;
+}
+
+div.options-slide h2{
+    padding-bottom: 20px;
 }

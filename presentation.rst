@@ -184,7 +184,6 @@ Uh Oh, We better test that!
 
   ...and for each of the copies
   No code re-use, bugs are everywhere
-  Fancy transition to show where we started.
   How did we get here? Where do we go next?
 
 --------------
@@ -420,7 +419,7 @@ Manually?
 Mush
 ----
 
-* Dependency injection
+* Dependency injection framework
 
 * Components specify their resources
 
@@ -430,59 +429,439 @@ Mush
 
 * Runners link those together
 
+--------------
 
+:data-y: r0
+:data-x: r1500
+
+Runners
+-------
+
+.. code-block:: python
+
+  from mush import Runner
+
+  def func1():
+      print('func1')
+
+  def func2():
+      print('func2')
+
+
+  runner = Runner()
+  runner.add(func1)
+  runner.add(func2)
+
+.. container:: box
+
+  ::
+
+    >>> runner()
+    func1
+    func2
+
+--------------
+
+Labels
+------
+
+.. code-block:: python
+
+  from mush import Runner
+
+  def func1():
+      print('func1')
+
+  def func2():
+      print('func2')
+
+  def func2():
+      print('func3')
+
+
+  runner = Runner()
+  runner.add(func1)
+  runner.add_label('middle')
+  runner.add(func2)
+
+  runner['middle'].add(func3)
+
+.. container:: box
+
+  ::
+
+    >>> runner()
+    func1
+    func3
+    func2
 
 
 --------------
 
+Configuring Resources
+---------------------
 
-Structure
-=========
+.. code-block:: python
 
-- runners
-- configuring resources
-- assemble and clone
-- factory function
+  def apple_tree():
+      print('I made an apple')
+      return Apple()
 
-- testing (should test runn
+  def magician(fruit: Apple) -> 'citrus':
+      print('I turned {0} into an orange'.format(fruit))
+      return Orange()
 
-concepts:
+  def juicer(fruit1: Apple, fruit2: 'citrus'):
+      print('I made juice out of {0} and {1}'.format(fruit1, fruit2))
+      return Juice()
 
-- assemble into a runner
-- have a high-level test of that
-- abstract out common bits
-- use lots of mush labels
+.. container:: box
+
+  ::
+
+    >>> runner = Runner(apple_tree, magician, juicer)
+    >>> runner()
+    I made an apple
+    I turned an apple into an orange
+    I made juice out of an apple and an orange
+    a refreshing fruit beverage
+
+--------------
+
+Declarative Configuration
+-------------------------
+
+.. code-block:: python
+
+  from mush import requires, returns
+
+  def apple_tree():
+      print('I made an apple')
+      return Apple()
+
+  @requires(Apple)
+  @returns('citrus')
+  def magician(fruit):
+      print('I turned {0} into an orange'.format(fruit))
+      return Orange()
+
+  @requires(fruit1=Apple, fruit2='citrus')
+  def juicer(fruit1, fruit2):
+      print('I made juice out of {0} and {1}'.format(fruit1, fruit2))
+      return Juice()
+
+.. container:: box
+
+  ::
+
+    >>> runner = Runner(apple_tree, magician, juicer)
+    >>> runner()
+    I made an apple
+    I turned an apple into an orange
+    I made juice out of an apple and an orange
+    a refreshing fruit beverage
+
+--------------
+
+Default Configuration
+---------------------
+
+.. code-block:: python
+
+  def apple_tree() -> 'apple':
+      print('I made an apple')
+      return Apple()
+
+  def magician(apple) -> 'citrus':
+      print('I turned {0} into an orange'.format(apple))
+      return Orange()
+
+  def juicer(apple, citrus):
+      print('I made juice out of {0} and {1}'.format(apple, citrus))
+      return Juice()
+
+.. container:: box
+
+  ::
+
+    >>> runner = Runner(apple_tree, magician, juicer)
+    >>> runner()
+    I made an apple
+    I turned an apple into an orange
+    I made juice out of an apple and an orange
+    a refreshing fruit beverage
+
+--------------
+
+Explicit Configuration
+----------------------
+
+.. code-block:: python
+
+  from mush import Runner, requires
+
+  def apple_tree():
+      print('I made an apple')
+      return Apple()
+
+  def magician(fruit):
+      print('I turned {0} into an orange'.format(fruit))
+      return Orange()
+
+  def juicer(fruit1, fruit2):
+      print('I made juice out of {0} and {1}'.format(fruit1, fruit2))
+
+  runner = Runner()
+  runner.add(apple_tree)
+  runner.add(magician, requires=Apple, returns='citrus')
+  runner.add(juicer, requires(fruit1=Apple, fruit2='citrus'))
+
+.. container:: box
+
+  ::
+
+    >>> runner()
+    I made an apple
+    I turned an apple into an orange
+    I made juice out of an apple and an orange
 
 ----------------
+
+:data-x: r0
+:data-y: r1200
+
+Back to our tested function...
+------------------------------
+
+.. include:: code/insert_note_mush.py
+  :code: python
+
+----------------
+
+:class: side-by-side
+
+Assemble and Clone
+------------------
+
+.. include:: code/manual.py
+  :code: python
+  :start-line: 7
+  :end-line: 25
+
+.. include:: code/assemble_and_clone.py
+  :code: python
+  :start-line: 5
+  :end-line: 37
+
+----------------
+
+:class: side-by-side
+
+Assemble and Clone
+------------------
+
+.. include:: code/assemble_and_clone.py
+  :code: python
+  :start-line: 5
+  :end-line: 37
+
+.. include:: code/assemble_and_clone.py
+  :code: python
+  :start-line: 47
+
+----------------
+
+:class: side-by-side
+
+Runner Factory
+--------------
+
+.. include:: code/assemble_and_clone.py
+  :code: python
+  :start-line: 5
+  :end-line: 37
+
+.. include:: code/runner_factory.py
+  :code: python
+  :start-line: 5
+  :end-line: 39
+
+----------------
+
+:class: side-by-side
+
+Runner Factory
+--------------
+
+.. include:: code/runner_factory.py
+  :code: python
+  :start-line: 5
+  :end-line: 39
+
+.. include:: code/runner_factory.py
+  :code: python
+  :start-line: 50
+
+----------------
+
+:class: side-by-side
+
+Testing the Base Runner
+-----------------------
+
+.. include:: code/assemble_and_clone.py
+  :code: python
+  :start-line: 5
+  :end-line: 37
+
+.. container:: box
+
+  - This is still a pain to test
+
+  - But you only have to do it once
+
+  - Component tests do heavy lifting
+
+----------------
+
+:id: testing-scripts
+
+Testing the Scripts
+-------------------
+
+.. container:: box
+
+  - How do we test these?
+
+  - Have we wired up resources correctly?
+
+.. include:: code/assemble_and_clone.py
+  :code: python
+  :start-line: 47
+
+----------------
+
+:id: testing-scripts-2
+
+Testing the Scripts
+-----------------------
+
+
+.. container:: sub-box
+
+  .. include:: code/assemble_and_clone.py
+    :code: python
+    :start-line: 47
+
+  .. include:: code/tests/test_assemble_and_clone.py
+    :code: python
+    :start-line: 11
+    :end-line: 32
+
+.. container:: sub-box
+
+  .. include:: code/tests/test_assemble_and_clone.py
+    :code: python
+    :start-line: 32
+
+--------------
+
+:id: summary
+:class: slide
+
+Summary
+=======
+
+.. container:: sp100
+
+  - keep your tasks and framework separate
+  - abstract and test framework components separately
+  - have one source of framework configuration information
+  - if using mush
+    - use lots of labels
+    - write a "run with" helper
+
+----------------
+
+:class: slide options-slide
+
+Tools I've Used
+===============
+
+mush
+----
+
+* https://mush.readthedocs.io
+* search for "mush python"
+
+testfixtures
+------------
+
+* http://testfixtures.readthedocs.io/
+* search for "testfixtures python"
+
+----------------
+
+:class: slide options-slide
 
 Options
 =======
 
-command line processing:
-- click
+command line processing
+-----------------------
+
 - argparse
 
-config file:
-- raw
-- ConfigParser (stdlib, terrible)
-- ZConfig (?!)
+  - standard library
+
+- click
+
+  - http://click.pocoo.org/
+  - search for "click python"
+
+----------------
+
+:class: slide options-slide
+
+Options
+=======
+
+config files
+------------
+
+- ConfigParser
+
+  - standard library
+
+- PyYAML
+
+  - https://github.com/yaml/pyyaml
+  - google for "python yaml"
+
 - configurator
 
-validation:
+  - https://github.com/Simplistix/configurator
+  - not finished yet
+
+----------------
+
+:class: slide options-slide
+
+Options
+=======
+
+validation
+----------
+
 - voluptuous
-- mushroom(?!)
-- other ones
 
-user preferences:
-- config files
-- env vars
+  - http://marshmallow.readthedocs.io/
+  - search for "python marshmallow"
 
-logging:
-- structlog
-- shoehorn
-- logbook
+- mushroom
 
-
+  - http://marshmallow.readthedocs.io/
+  - search for "python marshmallow"
 
 ----------------
 
@@ -496,36 +875,15 @@ Questions
 
 ----------
 
-:id: links
 :class: slide
 
-Links
+Thanks
 =======
 
-mush
-------------
+.. container:: sp100
 
-* https://pypi.python.org/pypi/testfixtures
-* search for "testfixtures python"
+  Getting hold of me:
 
-testfixtures
-------------
-
-* https://pypi.python.org/pypi/testfixtures
-* search for "testfixtures python"
-
-mortar_rdb
-----------
-
-* https://pypi.python.org/pypi/testfixtures
-* search for "testfixtures python"
-
-Chris Withers
--------------
-
-* chris@withers.org / cwithers@jumptrading.com
-* @chriswithers13
-
-.. note:: 
-
-   configurator? Roll links into "options" section?
+  * chris@withers.org
+  * cwithers@jumptrading.com
+  * @chriswithers13
